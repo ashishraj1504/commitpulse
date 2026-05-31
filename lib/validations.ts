@@ -37,6 +37,12 @@ export function toGraceValue(val?: string): number {
   return isNaN(parsed) ? 1 : Math.max(0, Math.min(parsed, 7));
 }
 
+export function toOpacityValue(val?: string): number {
+  if (!val) return 1.0;
+  const parsed = parseFloat(val);
+  return isNaN(parsed) ? 1.0 : Math.max(0.1, Math.min(parsed, 1.0));
+}
+
 export function toDimensionValue(val?: string): number | undefined {
   return val === undefined ? undefined : Number(val);
 }
@@ -206,6 +212,7 @@ const baseStreakParamsSchema = z.object({
   width: dimensionParam('width', 100, 1200),
   height: dimensionParam('height', 80, 800),
   grace: z.string().optional().transform(toGraceValue).default(1),
+  opacity: z.string().optional().transform(toOpacityValue).default(1.0),
   mode: z.enum(['commits', 'loc']).catch('commits').default('commits'),
   repo: z.string().optional(),
   org: z
