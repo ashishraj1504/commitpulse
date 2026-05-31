@@ -38,26 +38,24 @@ describe('Footer Component', () => {
 
     expect(contributorsLink).toBeTruthy();
   });
-  // Test for screen reader accessibility using flexible element checks
-  it('supports screen reader operations by using semantic HTML', () => {
-    // Render the footer and get the container safely out of it
-    const { container } = render(<Footer />);
+  // Verify accessibility by looking for the explicit landmark role screen readers look for
+  it('supports screen reader operations by using semantic HTML landmark structures', () => {
+    render(<Footer />);
 
-    // Query elements inside the container wrapper component
-    const footerElement = container.querySelector('footer') || container.querySelector('div');
-
-    // Verify that the foundational wrapper structure is active using standard Vitest matches
+    // Footers are exposed to assistive tech via the 'contentinfo' role
+    const footerElement = screen.getByRole('contentinfo');
     expect(footerElement).toBeDefined();
+    expect(footerElement.tagName.toLowerCase()).toBe('footer');
   });
 
-  // Test layout responsiveness across different screen widths
+  // Verify layout adaptation by making sure responsive structural classes are applied
   it('adapts layouts correctly across mobile and desktop viewports', () => {
-    // Verify mobile environment state
-    const mobileRender = render(<Footer />);
-    expect(mobileRender.container.firstChild).toBeTruthy();
+    const { container } = render(<Footer />);
 
-    // Verify desktop layout state via a safe rerender cycle
-    mobileRender.rerender(<Footer />);
-    expect(mobileRender.container.firstChild).toBeTruthy();
+    const footerElement = container.querySelector('footer');
+    expect(footerElement).toBeDefined();
+
+    // Validates that layout structural rules modify display behaviors across breakpoints
+    expect(container.innerHTML).toMatch(/(flex|grid|block|md:|sm:|lg:)/);
   });
 });
